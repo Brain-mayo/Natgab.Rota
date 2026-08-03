@@ -1,0 +1,15 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY src ./src
+
+# Rota data lives on a mounted volume so it survives redeploys.
+ENV DATA_DIR=/app/data
+VOLUME ["/app/data"]
+
+EXPOSE 3000
+CMD ["node", "src/server.js"]
